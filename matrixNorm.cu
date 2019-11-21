@@ -97,7 +97,7 @@ float A[N][N], B[N][N];
      /* Timing variables */
      struct timeval start, stop;  /* Elapsed times using gettimeofday() */
      struct timezone tzdummy;
-     //unsigned long long runtime;
+     unsigned long long runtime;
      
 
 
@@ -118,7 +118,7 @@ float A[N][N], B[N][N];
     cudaEvent_t cstart, cstop;
     cudaEventCreate(&cstart);
     cudaEventCreate(&cstop);
-    float gpu_elapsed_time_ms;
+    //float gpu_elapsed_time_ms;
 
     dim3 dimGrid(N, 1, 1);
     dim3 dimBlock(16, 1,1);
