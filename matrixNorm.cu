@@ -37,7 +37,7 @@ float A[N][N], B[N][N];
  /* Kernel function */
  
  __global__ void matrixNorm(float *A, float *B, int n) {
-    int col = blockIdx.x;
+    //int col = blockIdx.x;
     int row, stride;
     int tid = threadIdx.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
@@ -140,7 +140,7 @@ float A[N][N], B[N][N];
     cudaEventSynchronize(stop);
 
     // Transefr results from device to host
-    cudaMemcpy(B, d_b, sizeof(float)*n*n, cudaMemcpyDeviceToHost);
+    cudaMemcpy(B, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
      
    
     // compute time elapse on GPU computing
