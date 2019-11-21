@@ -40,9 +40,8 @@ float A[N][N], B[N][N];
     int col = blockIdx.x;
     int row, stride;
     int tid = threadIdx.x;
-    int dim = blockDim.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
-    __shared__ float partials[dim], fullCol[n];
+    __shared__ float partials[16], fullCol[n];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
@@ -97,8 +96,8 @@ float A[N][N], B[N][N];
  int main(int argc, char **argv) {
      /* Timing variables */
      //struct timeval start, stop;  /* Elapsed times using gettimeofday() */
-     struct timezone tzdummy;
-     unsigned long long runtime;
+     //struct timezone tzdummy;
+     //unsigned long long runtime;
      
 
 
@@ -121,6 +120,8 @@ float A[N][N], B[N][N];
     cudaEventCreate(&stop);
     float gpu_elapsed_time_ms;
 
+    dim3 dimGrid(N, 1, 1);
+    dim3 dimBlock(16, 1,1);
 
 
      /* Start Clock */
