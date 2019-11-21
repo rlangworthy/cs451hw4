@@ -95,8 +95,8 @@ float A[N][N], B[N][N];
  
  int main(int argc, char **argv) {
      /* Timing variables */
-     //struct timeval start, stop;  /* Elapsed times using gettimeofday() */
-     //struct timezone tzdummy;
+     struct timeval start, stop;  /* Elapsed times using gettimeofday() */
+     struct timezone tzdummy;
      //unsigned long long runtime;
      
 
@@ -115,9 +115,9 @@ float A[N][N], B[N][N];
     cudaMemcpy(d_a, A, sizeof(float)*N*N, cudaMemcpyHostToDevice);
 
     // some events to count the execution time
-    cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
+    cudaEvent_t cstart, cstop;
+    cudaEventCreate(&cstart);
+    cudaEventCreate(&cstop);
     float gpu_elapsed_time_ms;
 
     dim3 dimGrid(N, 1, 1);
@@ -128,29 +128,33 @@ float A[N][N], B[N][N];
      printf("\n---------------------------------------------\n");
      printf("Matrix size N = %d", N);
      printf("\nStarting clock.\n\n");
-     
+     gettimeofday(&start, &tzdummy);
+
      // start to count execution time of GPU Kernel 
-    cudaEventRecord(start, 0);
+    //cudaEventRecord(cstart, 0);
     
     // Launch simple matrix multiplication kernel
     matrixNorm<<<dimGrid, dimBlock>>>(d_a, d_b, N);  
     
     // time counting terminate
-    cudaEventRecord(stop, 0);
-    cudaEventSynchronize(stop);
+    //cudaEventRecord(cstop, 0);
+    //cudaEventSynchronize(cstop);
 
     // Transefr results from device to host
-    cudaMemcpy(B, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
+    //cudaMemcpy(B, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
      
    
     // compute time elapse on GPU computing
-    cudaEventElapsedTime(&gpu_elapsed_time_ms, start, stop);
-    printf("Time elapsed on simple matrix multiplication on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
+    //cudaEventElapsedTime(&gpu_elapsed_time_ms, cstart, cstop);
+    gettimeofday(&stop, &tzdummy);
+    runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
+    //printf("Time elapsed on matrix norm on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
 
      
      
      /* Display timing results */
-     printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
+     //printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
+     printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
      printf("\nStopped clock.");
      printf("\n---------------------------------------------\n");
      
