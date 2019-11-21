@@ -16,7 +16,7 @@
 
 
  /* Matrices */
-float A[N][N], B[N][N];
+float A[N][N], B[N][N], h_b[N][N];
  
  
  /* Initialize A and B*/
@@ -82,15 +82,41 @@ float A[N][N], B[N][N];
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
         if (sigma == 0.0){
-            B[threadIdx.x*n + blockIdx.x] = 0.0;
+            h_b[threadIdx.x*n + blockIdx.x] = 0.0;
         }
         else{
-            B[threadIdx.x*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
+            h_b[threadIdx.x*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
         }
     }
 
 }
  
+
+void matrixNormSerial() {
+    int row, col;
+    float mu, sigma; // Mean and Standard Deviation
+    
+    printf("Computing Serially.\n");
+    
+    for (col=0; col < N; col++) {
+        mu = 0.0;
+        for (row=0; row < N; row++)
+            mu += A[row][col];
+        mu /= (float) N;
+        sigma = 0.0;
+        for (row=0; row < N; row++)
+            sigma += powf(A[row][col] - mu, 2.0);
+        sigma /= (float) N;
+        sigma = sqrt(sigma);
+        for (row=0; row < N; row++) {
+            if (sigma == 0.0)
+                B[row][col] = 0.0;
+            else
+                B[row][col] = (A[row][col] - mu) / sigma;
+        }
+    }
+    
+}
  
  
  int main(int argc, char **argv) {
@@ -118,7 +144,7 @@ float A[N][N], B[N][N];
     cudaEvent_t cstart, cstop;
     cudaEventCreate(&cstart);
     cudaEventCreate(&cstop);
-    //float gpu_elapsed_time_ms;
+    float gpu_elapsed_time_ms;
 
     dim3 dimGrid(N, 1, 1);
     dim3 dimBlock(16, 1,1);
@@ -129,35 +155,40 @@ float A[N][N], B[N][N];
      printf("Matrix size N = %d", N);
      printf("\nStarting clock.\n\n");
      gettimeofday(&start, &tzdummy);
-
-     // start to count execution time of GPU Kernel 
-    //cudaEventRecord(cstart, 0);
+    
     
     // Launch simple matrix multiplication kernel
-    matrixNorm<<<dimGrid, dimBlock>>>(d_a, d_b, N);  
-    
+    matrixNormSerial();
     // time counting terminate
-    //cudaEventRecord(cstop, 0);
-    //cudaEventSynchronize(cstop);
-
-    // Transefr results from device to host
-    //cudaMemcpy(B, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
-     
-   
-    // compute time elapse on GPU computing
-    //cudaEventElapsedTime(&gpu_elapsed_time_ms, cstart, cstop);
-    gettimeofday(&stop, &tzdummy);
-    runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec);
-    //printf("Time elapsed on matrix norm on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
-
      
      
      /* Display timing results */
-     //printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
      printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
      printf("\nStopped clock.");
      printf("\n---------------------------------------------\n");
-     
+    
+
+     /* Start Clock */
+     printf("\n---------------------------------------------\n");
+     printf("Matrix size N = %d", N);
+     printf("\nStarting Cuda clock.\n\n");
+     cudaEventRecord(cstart, 0);
+
+     matrixNorm<<<dimGrid, dimBlock>>>(d_a, d_b, N);  
+    // start to count execution time of GPU Kernel 
+     cudaEventRecord(cstop, 0);
+     cudaEventSynchronize(cstop);
+ 
+     // Transefr results from device to host
+     cudaMemcpy(h_b, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
+    // compute time elapse on GPU computing
+    cudaEventElapsedTime(&gpu_elapsed_time_ms, cstart, cstop);
+    printf("Time elapsed on matrix norm on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
+    printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
+    printf("\nStopped clock.");
+    printf("\n---------------------------------------------\n");
+
+
     cudaFree(d_a);
     cudaFree(d_b);
     cudaFreeHost(A);
