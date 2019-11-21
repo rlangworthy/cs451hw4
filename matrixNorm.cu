@@ -28,6 +28,7 @@ float A[N][N], B[N][N], h_b[N][N];
          for (col = 0; col < N; col++) {
              A[row][col] = (float)rand() / 32768.0;
              B[row][col] = 0.0;
+             h_b[row][col] = 0.0;
          }
      }
      
@@ -159,8 +160,11 @@ void matrixNormSerial() {
     
     // Launch simple matrix multiplication kernel
     matrixNormSerial();
-    // time counting terminate
-     
+    
+    /* Stop Clock */
+    gettimeofday(&stop, &tzdummy);
+    runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec); 
+
      
      /* Display timing results */
      printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
@@ -179,7 +183,7 @@ void matrixNormSerial() {
      cudaEventRecord(cstop, 0);
      cudaEventSynchronize(cstop);
  
-     // Transefr results from device to host
+     // Transfer results from device to host
      cudaMemcpy(h_b, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
     // compute time elapse on GPU computing
     cudaEventElapsedTime(&gpu_elapsed_time_ms, cstart, cstop);
@@ -192,7 +196,7 @@ void matrixNormSerial() {
     cudaFree(d_a);
     cudaFree(d_b);
     cudaFreeHost(A);
-    cudaFreeHost(B);
+    cudaFreeHost(h_b);
 
 
 
