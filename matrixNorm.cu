@@ -191,7 +191,10 @@ void matrixNormSerial() {
     printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
-
+    int i;
+    for(i=0; i < 10; i++){
+        printf("B: %5.2f  b_h: %5.2f", B[0][i], h_b[0][i]);
+    }
 
     cudaFree(d_a);
     cudaFree(d_b);
