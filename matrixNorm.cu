@@ -16,7 +16,7 @@
 
 
  /* Matrices */
- volatile float A[N][N], B[N][N];
+float A[N][N], B[N][N];
  
  
  /* Initialize A and B*/
@@ -40,11 +40,12 @@
     int col = blockIdx.x;
     int row, stride;
     int tid = threadIdx.x;
+    int dim = blockDim.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
-    __shared__ float partials[blockDim.x], fullCol[n];
+    __shared__ float partials[dim], fullCol[n];
 
     //set up partial sums and copy working column into shared memory
-    for(row = threadIdx.x; row < n; row += blockDim.x;){
+    for(row = threadIdx.x; row < n; row += blockDim.x){
         fullCol[row] = A[threadIdx.x*n + blockIdx.x];
         partial += fullCol[row];
     }
@@ -63,7 +64,7 @@
 
 
     //repeat for sigma
-    for(row = threadIdx.x; row < n; row += blockDim.x;){
+    for(row = threadIdx.x; row < n; row += blockDim.x){
         partial += powf(fullCol[row]-mu, 2.0);
     }
     partials[tid] = partial;
@@ -80,12 +81,12 @@
     sigma = sqrt(sigma);
 
     //use copied column to fill in B array
-    for(row = threadIdx.x; row < n; row += blockDim.x;){
+    for(row = threadIdx.x; row < n; row += blockDim.x){
         if (sigma == 0.0){
-            B[row][col] = 0.0;
+            B[threadIdx.x*n + blockIdx.x] = 0.0;
         }
         else{
-            B[row][col] = (fullCol[row] -mu) / sigma;
+            B[threadIdx.x*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
         }
     }
 
@@ -95,7 +96,7 @@
  
  int main(int argc, char **argv) {
      /* Timing variables */
-     struct timeval start, stop;  /* Elapsed times using gettimeofday() */
+     //struct timeval start, stop;  /* Elapsed times using gettimeofday() */
      struct timezone tzdummy;
      unsigned long long runtime;
      
@@ -131,7 +132,7 @@
     cudaEventRecord(start, 0);
     
     // Launch simple matrix multiplication kernel
-    matrixNorm<<<dimGrid, dimBlock>>>(d_a, d_b, n);  
+    matrixNorm<<<dimGrid, dimBlock>>>(d_a, d_b, N);  
     
     // time counting terminate
     cudaEventRecord(stop, 0);
