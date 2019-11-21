@@ -83,10 +83,10 @@ float A[N][N], B[N][N], h_b[N][N];
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
         if (sigma == 0.0){
-            h_b[threadIdx.x*n + blockIdx.x] = 0.0;
+            B[threadIdx.x*n + blockIdx.x] = 0.0;
         }
         else{
-            h_b[threadIdx.x*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
+            B[threadIdx.x*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
         }
     }
 
@@ -160,7 +160,7 @@ void matrixNormSerial() {
     
     // Launch simple matrix multiplication kernel
     matrixNormSerial();
-    
+
     /* Stop Clock */
     gettimeofday(&stop, &tzdummy);
     runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec); 
