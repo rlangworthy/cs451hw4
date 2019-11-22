@@ -9,7 +9,7 @@
  #include <math.h>
  
  /* Program Parameters */
-int N=6000;  /* Matrix size */
+#define N 3000  /* Matrix size */
  
 int BLOCK_SIZE=256;
 
@@ -130,7 +130,7 @@ void matrixNormSerial() {
      unsigned long long runtime;
     
      if (argc == 2) {
-        N = atoi(argv[1]);
+        //N = atoi(argv[1]);
         if (N < 1 || N > 25*1024) {
             printf("N = %i is out of range.\n", N);
             exit(0);
@@ -138,6 +138,7 @@ void matrixNormSerial() {
         BLOCK_SIZE = powf(2, ceilf(log2(N/25)));
         printf("block size %i\n",BLOCK_SIZE);
         exit(0);
+
     }
     else {
         printf("Usage: %s [matrixDimension]\n",
