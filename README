@@ -2,3 +2,4 @@
 11.4 @ 32 threads/block
 7.3 @ 64 threads/block
 5.2 @ 128 threads/block
+7 @ 1024
