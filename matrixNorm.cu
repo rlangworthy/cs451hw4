@@ -41,7 +41,7 @@ float h_a[N][N], h_b[N][N];
  /* Kernel function */
  
  __global__ void matrixNorm(float *A, float *B, int n) {
-    //int col = blockIdx.x;
+    int col = blockIdx.x;
     int row, stride;
     int tid = threadIdx.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
@@ -49,7 +49,7 @@ float h_a[N][N], h_b[N][N];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
-        fullCol[row] = A[threadIdx.x*n + blockIdx.x];
+        fullCol[row] = A[threadIdx.x*n + col];
         partial += fullCol[row];
     }
     partials[tid] = partial;
@@ -85,7 +85,7 @@ float h_a[N][N], h_b[N][N];
 
     if((blockIdx.x == 5) && (tid == 0)){
         printf("mu: %5.2f, sigma: %5.2f\n", mu, sigma);
-        printf("%5.2f  %i  %5.2f\n", fullCol[16], n, fullCol[15]);
+        printf("%5.2f  %5.2f\n", fullCol[16], fullCol[1]);
     }
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
@@ -118,7 +118,7 @@ void matrixNormSerial() {
         sigma = sqrt(sigma);
         if(col == 5){
             printf("Serial: mu: %5.2f, sigma: %5.2f\n", mu, sigma);
-            printf("%5.2f\n", A[0][16]);
+            printf("%5.2f %5.2f\n", A[16][5], A[1][5]);
         }
         for (row=0; row < N; row++) {
             if (sigma == 0.0)
