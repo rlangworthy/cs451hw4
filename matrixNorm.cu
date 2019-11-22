@@ -16,7 +16,7 @@
 
 
  /* Matrices */
-float A[N][N], B[N][N], h_b[N][N];
+volatile float A[N][N], B[N][N], h_b[N][N];
  
  
  /* Initialize A and B*/
