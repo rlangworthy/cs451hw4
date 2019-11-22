@@ -85,7 +85,7 @@ float h_a[N][N], h_b[N][N];
 
     if((blockIdx.x == 5) && (tid == 0)){
         printf("mu: %5.2f, sigma: %5.2f\n", mu, sigma);
-        printf("%5.2f  %5.2f\n", fullCol[0]);
+        printf("%5.2f  %i  %5.2f\n", fullCol[0], n, fullCol[5999]);
     }
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
