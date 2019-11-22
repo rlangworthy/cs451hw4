@@ -83,8 +83,9 @@ float h_a[N][N], h_b[N][N];
     sigma = partials[0]/n;
     sigma = sqrt(sigma);
 
-    if(blockIdx.x == 5){
-        printf("mu: %5.2f, sigma: %5.2f", mu, sigma);
+    if((blockIdx.x == 5) && (tid == 0)){
+        printf("mu: %5.2f, sigma: %5.2f\n", mu, sigma);
+        printf("%5.2f  %5.2f\n", fullCol[0]);
     }
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
@@ -117,6 +118,7 @@ void matrixNormSerial() {
         sigma = sqrt(sigma);
         if(col == 5){
             printf("Serial: mu: %5.2f, sigma: %5.2f\n", mu, sigma);
+            printf("%5.2f\n", A[0][5]);
         }
         for (row=0; row < N; row++) {
             if (sigma == 0.0)
