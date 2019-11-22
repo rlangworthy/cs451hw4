@@ -90,10 +90,10 @@ float h_a[N][N], h_b[N][N];
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
         if (sigma == 0.0){
-            B[threadIdx.x*n + blockIdx.x] = 0.0;
+            B[row*n + blockIdx.x] = 0.0;
         }
         else{
-            B[threadIdx.x*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
+            B[row*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
         }
     }
 
