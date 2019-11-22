@@ -49,7 +49,7 @@ float h_a[N][N], h_b[N][N];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
-        fullCol[row] = A[threadIdx.x*n + col];
+        fullCol[row] = A[row*n + col];
         partial += fullCol[row];
     }
     partials[tid] = partial;
