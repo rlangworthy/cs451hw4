@@ -28,7 +28,7 @@ float h_a[N][N], h_b[N][N];
      for (row = 0; row < N; row++) {
          for (col = 0; col < N; col++) {
              A[row][col] = (float)rand() / 32768.0;
-             h_a[row][col] = A[row][col]
+             h_a[row][col] = A[row][col];
              B[row][col] = 0.0;
              h_b[row][col] = 0.0;
 
@@ -201,7 +201,7 @@ void matrixNormSerial() {
 
     cudaFree(d_a);
     cudaFree(d_b);
-    cudaFreeHost(A);
+    cudaFreeHost(h_a);
     cudaFreeHost(h_b);
 
 
