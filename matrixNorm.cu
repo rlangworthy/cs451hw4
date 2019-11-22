@@ -11,7 +11,7 @@
  /* Program Parameters */
  #define N 6000  /* Matrix size */
  
- #define BLOCK_SIZE 64
+ #define BLOCK_SIZE 128
 
 
  /* Matrices */
