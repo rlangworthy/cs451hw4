@@ -3,3 +3,7 @@
 7.3 @ 64 threads/block
 5.2 @ 128 threads/block
 7 @ 1024
+5.9 @ 512
+5 @ 256 threads/block
+
+Amount of work each thread does vs communication between threads cost.  

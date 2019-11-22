@@ -1,0 +1,15 @@
+The design of this algorithm is to minimize global memory access first and 
+balance thread synchronizaiton costs with the amount of work per thread second.
+Global memory is accessed in the first stage of the mean calculation, each
+block maintains a copy of the row it is meant to work on after this.   It is
+accessed once again at the end of the program to submit the calculated values. 
+Mean and variance calculations are each split equally between the threads and
+reduced by means of a reduction operation.  This is where balancing between 
+number of threads and synchronizaiton costs takes place. Doubling the number of
+threads halves the number of calculations each thread has to do but adds one 
+more step to the reducion process.  After some experimentation I found that 25
+was a good ratio of matrix size to number of threads.  More threads and the
+synchronizaiton cost outweighed the time saved per thread.
+
+This approach and implementaiton is fairly simple but could easily be expanded
+by using more dimensions for blocks
