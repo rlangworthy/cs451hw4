@@ -16,7 +16,8 @@
 
 
  /* Matrices */
-volatile float A[N][N], B[N][N], h_b[N][N];
+volatile float A[N][N], B[N][N];
+float h_a[N][N], h_b[N][N];
  
  
  /* Initialize A and B*/
@@ -27,8 +28,10 @@ volatile float A[N][N], B[N][N], h_b[N][N];
      for (row = 0; row < N; row++) {
          for (col = 0; col < N; col++) {
              A[row][col] = (float)rand() / 32768.0;
+             h_a[row][col] = A[row][col]
              B[row][col] = 0.0;
              h_b[row][col] = 0.0;
+
          }
      }
      
@@ -139,7 +142,7 @@ void matrixNormSerial() {
     cudaMalloc((void **) &d_b, sizeof(float)*N*N);
 
     // copy matrix A from host to device memory
-    cudaMemcpy(d_a, A, sizeof(float)*N*N, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_a, h_a, sizeof(float)*N*N, cudaMemcpyHostToDevice);
 
     // some events to count the execution time
     cudaEvent_t cstart, cstop;
