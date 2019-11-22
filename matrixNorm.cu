@@ -9,9 +9,9 @@
  #include <math.h>
  
  /* Program Parameters */
-int N 6000  /* Matrix size */
+int N=6000;  /* Matrix size */
  
-int BLOCK_SIZE 256
+int BLOCK_SIZE=256;
 
 
  /* Matrices */
