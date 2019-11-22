@@ -11,7 +11,7 @@
  /* Program Parameters */
 #define N 3000  /* Matrix size */
  
-int BLOCK_SIZE=256;
+#define BLOCK_SIZE 256;
 
 
  /* Matrices */
@@ -128,14 +128,14 @@ void matrixNormSerial() {
      struct timeval start, stop;  /* Elapsed times using gettimeofday() */
      struct timezone tzdummy;
      unsigned long long runtime;
-    
+    /*
      if (argc == 2) {
         //N = atoi(argv[1]);
         if (N < 1 || N > 25*1024) {
             printf("N = %i is out of range.\n", N);
             exit(0);
         }
-        BLOCK_SIZE = powf(2, ceilf(log2(N/25)));
+        BLOCK_SIZE = powf(2, ceilf(log2(N/25.0)));
         printf("block size %i\n",BLOCK_SIZE);
         exit(0);
 
@@ -145,7 +145,7 @@ void matrixNormSerial() {
         argv[0]);
         printf("Default N=6000\n");
     }
-
+*/
 
 
      /* Initialize A and B */
