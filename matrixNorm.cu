@@ -203,7 +203,7 @@ void matrixNormSerial() {
 
     int i;
     for(i=0; i < 10; i++){
-        printf("Spot check for correctness on row 100, cols 0-9: \n")
+        printf("Spot check for correctness on row 100, cols 0-9: \n");
         printf("B: %5.2f  b_h: %5.2f\n", B[100][i], h_b[100][i]);
     }
 
