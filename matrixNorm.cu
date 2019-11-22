@@ -9,7 +9,7 @@
  #include <math.h>
  
  /* Program Parameters */
- #define N 12000  /* Matrix size */
+ #define N 8000  /* Matrix size */
  
  #define BLOCK_SIZE 256
 
