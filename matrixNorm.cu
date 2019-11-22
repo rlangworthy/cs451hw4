@@ -11,8 +11,7 @@
  /* Program Parameters */
  #define N 6000  /* Matrix size */
  
- #define BLOCK_SIZE 16
- #define TILE_WIDTH 16
+ #define BLOCK_SIZE 32
 
 
  /* Matrices */
@@ -45,7 +44,7 @@ float h_a[N][N], h_b[N][N];
     int row, stride;
     int tid = threadIdx.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
-    __shared__ float partials[16], fullCol[N];
+    __shared__ float partials[BLOCK_SIZE], fullCol[N];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
@@ -152,7 +151,7 @@ void matrixNormSerial() {
     float gpu_elapsed_time_ms;
 
     dim3 dimGrid(N, 1, 1);
-    dim3 dimBlock(16, 1,1);
+    dim3 dimBlock(BLOCK_SIZE, 1,1);
 
 
      /* Start Clock */
