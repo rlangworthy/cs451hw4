@@ -83,10 +83,6 @@ float h_a[N][N], h_b[N][N];
     sigma = partials[0]/n;
     sigma = sqrt(sigma);
 
-    if((blockIdx.x == 5) && (tid == 0)){
-        printf("mu: %5.2f, sigma: %5.2f\n", mu, sigma);
-        printf("%5.2f  %5.2f\n", fullCol[16], fullCol[1]);
-    }
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
         if (sigma == 0.0){
@@ -116,10 +112,7 @@ void matrixNormSerial() {
             sigma += powf(A[row][col] - mu, 2.0);
         sigma /= (float) N;
         sigma = sqrt(sigma);
-        if(col == 5){
-            printf("Serial: mu: %5.2f, sigma: %5.2f\n", mu, sigma);
-            printf("%5.2f %5.2f\n", A[16][5], A[1][5]);
-        }
+
         for (row=0; row < N; row++) {
             if (sigma == 0.0)
                 B[row][col] = 0.0;
@@ -202,16 +195,17 @@ void matrixNormSerial() {
     printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
-    int i;
-    for(i=0; i < 10; i++){
-        printf("B: %5.2f  b_h: %5.2f\n", B[0][i], h_b[0][i]);
-    }
 
     cudaFree(d_a);
     cudaFree(d_b);
     cudaFreeHost(h_a);
     cudaFreeHost(h_b);
 
+    int i;
+    for(i=0; i < 10; i++){
+        printf("Spot check for correctness on row 100, cols 0-9: \n")
+        printf("B: %5.2f  b_h: %5.2f\n", B[100][i], h_b[100][i]);
+    }
 
 
      exit(0);
