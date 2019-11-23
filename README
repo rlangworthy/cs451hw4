@@ -7,3 +7,9 @@
 5 @ 256 threads/block
 
 Amount of work each thread does vs communication between threads cost.  
+
+azure
+112 @16
+72@32
+37@64
+24@128
