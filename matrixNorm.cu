@@ -11,7 +11,7 @@
  /* Program Parameters */
  #define MAXN 8000  /* Matrix size */
  
-int BLOCK_SIZE = 256
+int BLOCK_SIZE = 256;
 
 int N=6000;
 
@@ -45,7 +45,7 @@ float h_a[MAXN][MAXN], h_b[MAXN][MAXN];
     int row, stride;
     int tid = threadIdx.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
-    __shared__ float partials[blockDim.x], fullCol[n];
+    __shared__ float partials[], fullCol[];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
