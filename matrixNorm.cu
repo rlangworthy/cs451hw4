@@ -9,14 +9,15 @@
  #include <math.h>
  
  /* Program Parameters */
- #define N 6000  /* Matrix size */
+ #define MAXN 8000  /* Matrix size */
  
- #define BLOCK_SIZE 256
+int BLOCK_SIZE = 256
 
+int N=6000;
 
  /* Matrices */
-volatile float A[N][N], B[N][N];
-float h_a[N][N], h_b[N][N];
+volatile float A[MAXN][MAXN], B[MAXN][MAXN];
+float h_a[MAXN][MAXN], h_b[MAXN][MAXN];
  
  
  /* Initialize A and B*/
@@ -44,7 +45,7 @@ float h_a[N][N], h_b[N][N];
     int row, stride;
     int tid = threadIdx.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
-    __shared__ float partials[BLOCK_SIZE], fullCol[N];
+    __shared__ float partials[blockDim.x], fullCol[n];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
@@ -128,7 +129,24 @@ void matrixNormSerial() {
      struct timeval start, stop;  /* Elapsed times using gettimeofday() */
      struct timezone tzdummy;
      unsigned long long runtime;
-     
+    
+    
+    
+    if (argc == 3) {
+        BLOCK_SIZE = atoi(argv[2]);
+    }
+    if(argc >=2){
+        N = atoi(argv[1]);
+        if (N < 1 || N > MAXN) {
+            printf("N = %i is out of range.\n", N);
+            exit(0);
+        }
+    }
+    printf("Usage: %s [matrixDimension] [numThreadsPerBlock]\n",
+    argv[0]);
+        
+    printf("Using defaults matrixDimension=%i, numThreadsPerBlock=%i\n", N, BLOCK_SIZE);
+    
 
 
 
@@ -156,7 +174,6 @@ void matrixNormSerial() {
 
      /* Start Clock */
      printf("\n---------------------------------------------\n");
-     printf("Matrix size N = %d", N);
      printf("\nStarting clock.\n\n");
      gettimeofday(&start, &tzdummy);
     
@@ -177,7 +194,6 @@ void matrixNormSerial() {
 
      /* Start Clock */
      printf("\n---------------------------------------------\n");
-     printf("Matrix size N = %d", N);
      printf("\nStarting Cuda clock.\n\n");
      cudaEventRecord(cstart, 0);
 

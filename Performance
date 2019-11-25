@@ -1,0 +1,13 @@
+P100 GPU performance (ms) : 
+    Matrix Size = 6000 
+        Provided Serial Code: ~1750-1650
+        11.4 @ 32 threads/block
+        7.3 @ 64 threads/block
+        5.2 @ 128 threads/block
+        7 @ 1024
+        5.9 @ 512
+        5 @ 256 threads/block
+
+Azure Cuda (NC6_Promo)
+    Matrix Size = 6000
+        Provided Serial Code: ~1750-1650

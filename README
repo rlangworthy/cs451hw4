@@ -1,15 +1,13 @@
-~1750-1650 vs 20.4 @ 16 threads/block
-11.4 @ 32 threads/block
-7.3 @ 64 threads/block
-5.2 @ 128 threads/block
-7 @ 1024
-5.9 @ 512
-5 @ 256 threads/block
+Compile with 
 
-Amount of work each thread does vs communication between threads cost.  
+$ nvcc matrixNorm.cu -o matrixNorm
 
-azure
-112 @16
-72@32
-37@64
-24@128
+Usage is
+
+$ matrixNorm [matrixDimension] [numThreadsPerBlock]
+
+Takes two optional arguments for matrix size and # threads per blocks.  If
+one or more arguments are provided, the first will be used as the matrix size
+and the second will be used as the number of threads per block.  If one
+argument is provided the default number of threads per block is 256, if no
+arguments are provided the default matrix size is 6000.

@@ -7,9 +7,10 @@ Mean and variance calculations are each split equally between the threads and
 reduced by means of a reduction operation.  This is where balancing between 
 number of threads and synchronizaiton costs takes place. Doubling the number of
 threads halves the number of calculations each thread has to do but adds one 
-more step to the reducion process.  After some experimentation I found that 25
-was a good ratio of matrix size to number of threads.  More threads and the
-synchronizaiton cost outweighed the time saved per thread.
+more step to the reducion process.  The costs associated with this vary for
+different GPU's so some experimentation/referncing documentation is necessary.
+For the P100 gpu 256 threads/block with a size 6000 matrix was ideal, for the 
+Azure NC6_Promo 128 threads/block was best.
 
 This approach and implementaiton is fairly simple but could easily be expanded
-by using more dimensions for blocks
+by using more dimensions for blocks as well as more blocks per column.
