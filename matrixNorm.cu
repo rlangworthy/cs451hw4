@@ -141,11 +141,15 @@ void matrixNormSerial() {
             exit(0);
         }
     }
-    printf("Usage: %s [matrixDimension] [numThreadsPerBlock]\n",
-    argv[0]);
-        
-    printf("Using defaults matrixDimension=%i, numThreadsPerBlock=%i\n", N, BLOCK_SIZE);
-    
+    if(argc == 1){
+        printf("Usage: %s [matrixDimension] [numThreadsPerBlock]\n",
+        argv[0]);
+            
+        printf("Using defaults matrixDimension=%i, numThreadsPerBlock=%i\n", N, BLOCK_SIZE);
+    }else{
+        printf("Matrix Size = %i\n", N);
+        printf("Block Size = %i\n", BLOCK_SIZE);
+    }
 
 
 
