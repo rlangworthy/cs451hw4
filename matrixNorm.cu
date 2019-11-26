@@ -124,6 +124,14 @@ void matrixNormSerial() {
  
  
 void runTest(float serial) {
+
+    // Allocate memory space on the device
+    float *d_a, *d_b;
+    cudaMalloc((void **) &d_a, sizeof(float)*MAXN*MAXN);
+    cudaMalloc((void **) &d_b, sizeof(float)*MAXN*MAXN);
+
+    // copy matrix A from host to device memory
+    cudaMemcpy(d_a, h_a, sizeof(float)*MAXN*MAXN, cudaMemcpyHostToDevice);
     int i;
     // some events to count the execution time
     cudaEvent_t cstart, cstop;
@@ -151,18 +159,14 @@ void runTest(float serial) {
         for(j=0; j < 10; j++){
                 printf("B: %5.2f  b_h: %5.2f\n", B[100][j], h_b[100][j]);
         }
-
     }
+    cudaFree(d_a);
+    cudaFree(d_b);
+    cudaFreeHost(h_a);
+    cudaFreeHost(h_b);
 } 
 
 float runSerial(){
-    // Allocate memory space on the device
-    float *d_a, *d_b;
-    cudaMalloc((void **) &d_a, sizeof(float)*MAXN*MAXN);
-    cudaMalloc((void **) &d_b, sizeof(float)*MAXN*MAXN);
-
-    // copy matrix A from host to device memory
-    cudaMemcpy(d_a, h_a, sizeof(float)*MAXN*MAXN, cudaMemcpyHostToDevice);
 
     struct timeval start, stop;  /* Elapsed times using gettimeofday() */
     struct timezone tzdummy;
@@ -260,11 +264,12 @@ int main(int argc, char **argv) {
         printf("\nStopped clock.");
         printf("\n---------------------------------------------\n");
         printf("Speedup = %g", serial/gpu_elapsed_time_ms);
+        cudaFree(d_a);
+        cudaFree(d_b);
+        cudaFreeHost(h_a);
+        cudaFreeHost(h_b);
     }
-    cudaFree(d_a);
-    cudaFree(d_b);
-    cudaFreeHost(h_a);
-    cudaFreeHost(h_b);
+    
     int i;
     printf("Spot check for correctness on row 100, cols 0-9: \n");
     for(i=0; i < 10; i++){
