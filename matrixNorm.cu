@@ -154,11 +154,6 @@ void runTest(float serial) {
         // compute time elapse on GPU computing
         cudaEventElapsedTime(&gpu_elapsed_time_ms, cstart, cstop);
         printf("Threads = %i, Runtime = %g, Speedup = %g\n", i, (float)gpu_elapsed_time_ms, serial/gpu_elapsed_time_ms);
-        int j;
-            printf("Spot check for correctness on row 100, cols 0-9, threads %i: \n", i);
-        for(j=0; j < 10; j++){
-                printf("B: %5.2f  b_h: %5.2f\n", B[100][j], h_b[100][j]);
-        }
     }
     cudaFree(d_a);
     cudaFree(d_b);
@@ -263,7 +258,7 @@ int main(int argc, char **argv) {
         printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
         printf("\nStopped clock.");
         printf("\n---------------------------------------------\n");
-        printf("Speedup = %g", serial/gpu_elapsed_time_ms);
+        printf("Speedup = %g\n", serial/gpu_elapsed_time_ms);
         cudaFree(d_a);
         cudaFree(d_b);
         cudaFreeHost(h_a);
