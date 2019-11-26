@@ -156,6 +156,13 @@ void runTest(float serial) {
 } 
 
 float runSerial(){
+    // Allocate memory space on the device
+    float *d_a, *d_b;
+    cudaMalloc((void **) &d_a, sizeof(float)*MAXN*MAXN);
+    cudaMalloc((void **) &d_b, sizeof(float)*MAXN*MAXN);
+
+    // copy matrix A from host to device memory
+    cudaMemcpy(d_a, h_a, sizeof(float)*MAXN*MAXN, cudaMemcpyHostToDevice);
 
     struct timeval start, stop;  /* Elapsed times using gettimeofday() */
     struct timezone tzdummy;
@@ -179,7 +186,7 @@ float runSerial(){
     printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
-   return (float)runtime/(float)1000)
+   return (float)runtime/(float)1000);
 }
 
 
@@ -214,19 +221,18 @@ int main(int argc, char **argv) {
     
      float serial = runSerial();
 
-    // Allocate memory space on the device
-    float *d_a, *d_b;
-    cudaMalloc((void **) &d_a, sizeof(float)*MAXN*MAXN);
-    cudaMalloc((void **) &d_b, sizeof(float)*MAXN*MAXN);
-
-    // copy matrix A from host to device memory
-    cudaMemcpy(d_a, h_a, sizeof(float)*MAXN*MAXN, cudaMemcpyHostToDevice);
-
     if(BLOCK_SIZE == 0) {
         runTest(serial);
-        exit(0)
+        exit(0);
     }else {
         // some events to count the execution time
+        // Allocate memory space on the device
+        float *d_a, *d_b;
+        cudaMalloc((void **) &d_a, sizeof(float)*MAXN*MAXN);
+        cudaMalloc((void **) &d_b, sizeof(float)*MAXN*MAXN);
+
+        // copy matrix A from host to device memory
+        cudaMemcpy(d_a, h_a, sizeof(float)*MAXN*MAXN, cudaMemcpyHostToDevice);
         cudaEvent_t cstart, cstop;
         cudaEventCreate(&cstart);
         cudaEventCreate(&cstop);
@@ -253,6 +259,7 @@ int main(int argc, char **argv) {
         printf("Runtime = %g ms.\n", (float)gpu_elapsed_time_ms);
         printf("\nStopped clock.");
         printf("\n---------------------------------------------\n");
+        printf("Speedup = %g", serial/gpu_elapsed_time_ms);
     }
     cudaFree(d_a);
     cudaFree(d_b);
