@@ -190,7 +190,7 @@ float runSerial(){
     printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
     printf("\nStopped clock.");
     printf("\n---------------------------------------------\n");
-   return (float)runtime/(float)1000);
+    return ((float)runtime/(float)1000);
 }
 
 
