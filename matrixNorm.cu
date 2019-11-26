@@ -123,14 +123,40 @@ void matrixNormSerial() {
 }
  
  
- int main(int argc, char **argv) {
+void runTest() {
+
+} 
+
+void runSerial(){
+
+    struct timeval start, stop;  /* Elapsed times using gettimeofday() */
+    struct timezone tzdummy;
+    unsigned long long runtime;
+
+    /* Start Clock */
+    printf("\n---------------------------------------------\n");
+    printf("\nStarting clock.\n\n");
+    gettimeofday(&start, &tzdummy);
+   
+   
+   // Launch simple matrix multiplication kernel
+   matrixNormSerial();
+
+   /* Stop Clock */
+   gettimeofday(&stop, &tzdummy);
+   runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec); 
+
+    
+    /* Display timing results */
+    printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
+    printf("\nStopped clock.");
+    printf("\n---------------------------------------------\n");
+   
+}
+
+
+int main(int argc, char **argv) {
      /* Timing variables */
-     struct timeval start, stop;  /* Elapsed times using gettimeofday() */
-     struct timezone tzdummy;
-     unsigned long long runtime;
-    
-    
-    
     if (argc == 3) {
         BLOCK_SIZE = atoi(argv[2]);
     }
@@ -148,14 +174,17 @@ void matrixNormSerial() {
         printf("Using defaults matrixDimension=%i, numThreadsPerBlock=%i\n", N, BLOCK_SIZE);
     }else{
         printf("Matrix Size = %i\n", N);
-        printf("Block Size = %i\n", BLOCK_SIZE);
+        if(BLOCK_SIZE == 0){
+            printf("Running Test \n\n");
+        }else {
+            printf("Block Size = %i\n", BLOCK_SIZE);
+        }
     }
-
-
 
      /* Initialize A and B */
      initialize_inputs();
-     
+    
+     runSerial();
      
     // Allocate memory space on the device
     float *d_a, *d_b;
@@ -175,25 +204,7 @@ void matrixNormSerial() {
     dim3 dimBlock(BLOCK_SIZE, 1,1);
 
 
-     /* Start Clock */
-     printf("\n---------------------------------------------\n");
-     printf("\nStarting clock.\n\n");
-     gettimeofday(&start, &tzdummy);
-    
-    
-    // Launch simple matrix multiplication kernel
-    matrixNormSerial();
-
-    /* Stop Clock */
-    gettimeofday(&stop, &tzdummy);
-    runtime = (unsigned long long)(stop.tv_sec - start.tv_sec) * 1000000 + (stop.tv_usec - start.tv_usec); 
-
      
-     /* Display timing results */
-     printf("Runtime = %g ms.\n", (float)runtime/(float)1000);
-     printf("\nStopped clock.");
-     printf("\n---------------------------------------------\n");
-    
 
      /* Start Clock */
      printf("\n---------------------------------------------\n");

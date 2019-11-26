@@ -10,4 +10,6 @@ Takes two optional arguments for matrix size and # threads per blocks.  If
 one or more arguments are provided, the first will be used as the matrix size
 and the second will be used as the number of threads per block.  If one
 argument is provided the default number of threads per block is 256, if no
-arguments are provided the default matrix size is 6000.
+arguments are provided the default matrix size is 6000.  If numThreadsPerBlock
+is set to 0 it will run a limited output test looping over the caluculation
+with different numbers of threads per block.
