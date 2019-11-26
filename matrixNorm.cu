@@ -9,7 +9,7 @@
  #include <math.h>
  
  /* Program Parameters */
- #define MAXN 8000  /* Matrix size */
+ #define MAXN 10000  /* Matrix size */
  
 int BLOCK_SIZE = 256;
 

@@ -11,4 +11,12 @@ P100 GPU performance (ms) :
 Azure Cuda (NC6_Promo)
     Matrix Size = 6000
         Provided Serial Code: ~1750-1650
-        
+        151 @ 16 thread/block
+        94 @ 32 thread/block
+        50 @ 64 thread/block
+        28 @ 128 thread/block
+        24 @ 256 thread/block
+        37 @ 512 thread/block
+        37 @ 1024 thread/block
+    
+    
