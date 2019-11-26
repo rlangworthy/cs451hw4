@@ -155,11 +155,11 @@ void matrixNormSerial() {
      
     // Allocate memory space on the device
     float *d_a, *d_b;
-    cudaMalloc((void **) &d_a, sizeof(float)*N*N);
-    cudaMalloc((void **) &d_b, sizeof(float)*N*N);
+    cudaMalloc((void **) &d_a, sizeof(float)*MAXN*MAXN);
+    cudaMalloc((void **) &d_b, sizeof(float)*MAXN*MAXN);
 
     // copy matrix A from host to device memory
-    cudaMemcpy(d_a, h_a, sizeof(float)*N*N, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_a, h_a, sizeof(float)*MAXN*MAXN, cudaMemcpyHostToDevice);
 
     // some events to count the execution time
     cudaEvent_t cstart, cstop;
@@ -202,7 +202,7 @@ void matrixNormSerial() {
      cudaEventSynchronize(cstop);
  
      // Transfer results from device to host
-     cudaMemcpy(h_b, d_b, sizeof(float)*N*N, cudaMemcpyDeviceToHost);
+     cudaMemcpy(h_b, d_b, sizeof(float)*MAXN*MAXN, cudaMemcpyDeviceToHost);
     // compute time elapse on GPU computing
     cudaEventElapsedTime(&gpu_elapsed_time_ms, cstart, cstop);
     printf("Time elapsed on matrix norm on GPU: %f ms.\n\n", gpu_elapsed_time_ms);
