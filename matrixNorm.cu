@@ -48,7 +48,7 @@ float h_a[MAXN][MAXN], h_b[MAXN][MAXN];
     __shared__ float partials[1024], fullCol[MAXN];
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
-        fullCol[row] = A[row*n + col];
+        fullCol[row] = A[row*MAXN + col];
         partial += fullCol[row];
     }
     partials[tid] = partial;
@@ -85,10 +85,10 @@ float h_a[MAXN][MAXN], h_b[MAXN][MAXN];
     //use copied column to fill in B array
     for(row = threadIdx.x; row < n; row += blockDim.x){
         if (sigma == 0.0){
-            B[row*n + blockIdx.x] = 0.0;
+            B[row*MAXN + blockIdx.x] = 0.0;
         }
         else{
-            B[row*n + blockIdx.x] = (fullCol[row] -mu) / sigma;
+            B[row*MAXN + blockIdx.x] = (fullCol[row] -mu) / sigma;
         }
     }
 
