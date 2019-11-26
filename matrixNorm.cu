@@ -45,7 +45,7 @@ float h_a[MAXN][MAXN], h_b[MAXN][MAXN];
     int row, stride;
     int tid = threadIdx.x;
     float mu, sigma, partial=0; // Mean and Standard Deviation
-    __shared__ float partials[], fullCol[];
+    __shared__ float partials[1024], fullCol[MAXN];
 
     //set up partial sums and copy working column into shared memory
     for(row = threadIdx.x; row < n; row += blockDim.x){
